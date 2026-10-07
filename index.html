@@ -1,1 +1,320 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BRINCADEIRA SHIPPO</title>
 
+                <!-- ICON -->
+  <link rel="icon" href="tempo-de-vida-relogio-coracao.png">
+
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: Arial, sans-serif;
+    background: linear-gradient(135deg, #18001f, #42002f, #100012);
+    color: white;
+    padding: 20px;
+}
+
+.container {
+    width: 90%;
+    max-width: 550px;
+    background: rgba(255,255,255,0.08);
+    padding: 30px;
+    border-radius: 25px;
+    text-align: center;
+    box-shadow: 0 0 30px rgba(255, 0, 170, 0.3);
+}
+
+h1 {
+    color: #ff55c8;
+    margin-bottom: 10px;
+}
+
+.subtitulo {
+    color: #ddd;
+    margin-bottom: 25px;
+}
+
+select,
+input {
+    width: 100%;
+    padding: 14px;
+    margin: 8px 0;
+    border: none;
+    border-radius: 12px;
+    font-size: 16px;
+    outline: none;
+}
+
+button {
+    width: 100%;
+    padding: 14px;
+    margin-top: 15px;
+    border: none;
+    border-radius: 12px;
+    background: #ff29b5;
+    color: white;
+    font-size: 17px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+button:hover {
+    background: #ff5bc7;
+}
+
+#matematica,
+#resultado {
+    display: none;
+    margin-top: 25px;
+}
+
+.conta {
+    font-size: 32px;
+    font-weight: bold;
+    color: #ffd1f2;
+    margin: 20px 0;
+}
+
+.matematica-ok {
+    font-size: 25px;
+    color: #55ff9a;
+    font-weight: bold;
+}
+
+.dupla {
+    font-size: 28px;
+    font-weight: bold;
+    margin-top: 25px;
+}
+
+.shippo {
+    font-size: 30px;
+    color: #ff75d5;
+    font-weight: bold;
+    margin: 18px 0;
+}
+
+.novamente {
+    background: #5c1cff;
+}
+
+/* Rodapé */
+.creditos {
+    margin-top: 28px;
+    padding-top: 18px;
+    border-top: 1px solid rgba(255,255,255,0.12);
+    color: #c9b7d4;
+    font-size: 14px;
+}
+
+.creditos strong {
+    color: #ff55c8;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <h1>BRINCADEIRA SHIPPO</h1>
+
+    <p class="subtitulo">
+        Escolha duas pessoas e descobrir o shippo!
+    </p>
+
+    <select id="pessoa1">
+        <option value="">Escolha a primeira pessoa</option>
+        <option value="YUBR">YUBR</option>
+        <option value="VIVI">VIVI</option>
+        <option value="KAIO">KAIO</option>
+        <option value="GABY">GABY</option>
+        <option value="PEPE">PEPE</option>
+        <option value="SILVA">SILVA</option>
+        <option value="SARAH">SARAH</option>
+        <option value="KAUA">KAUA</option>
+    </select>
+
+    <select id="pessoa2">
+        <option value="">Escolha a segunda pessoa</option>
+        <option value="YUBR">YUBR</option>
+        <option value="VIVI">VIVI</option>
+        <option value="KAIO">KAIO</option>
+        <option value="GABY">GABY</option>
+        <option value="PEPE">PEPE</option>
+        <option value="SILVA">SILVA</option>
+        <option value="SARAH">SARAH</option>
+        <option value="KAUA">KAUA</option>
+    </select>
+
+    <button onclick="comecar()">🧮 COMEÇAR</button>
+
+    <div id="matematica">
+        <h2>🧠 Resolva a matemática!</h2>
+
+        <div class="conta" id="conta"></div>
+
+        <input
+            type="number"
+            id="resposta"
+            placeholder="Digite a resposta"
+        >
+
+        <button onclick="verificarMatematica()">
+            ✅ RESPONDER
+        </button>
+    </div>
+
+    <div id="resultado">
+
+        <div class="matematica-ok">
+            🧮 ✅ ACERTOU!
+        </div>
+
+        <div class="dupla" id="dupla"></div>
+
+        <div class="shippo" id="shippo"></div>
+
+        <button class="novamente" onclick="location.reload()">
+            🔄 JOGAR NOVAMENTE
+        </button>
+
+    </div>
+
+    <p class="creditos">
+         Opa, <strong>Gaby</strong> 
+    </p>
+
+</div>
+
+<script>
+let duplaAtual = "";
+let respostaCorreta = 0;
+
+// Resultados das duplas
+const resultadosFixos = {
+    "YUBR-VIVI": "ACERTOU",
+    "VIVI-YUBR": "ACERTOU",
+
+    "YUBR-KAIO": "ERROU",
+    "KAIO-YUBR": "ERROU",
+
+    "GABY-KAIO": "ACERTOU",
+    "KAIO-GABY": "ACERTOU",
+
+    "KAIO-PEPE": "ERROU",
+    "PEPE-KAIO": "ERROU",
+
+    "PEPE-SILVA": "ACERTOU",
+    "SILVA-PEPE": "ACERTOU",
+
+    "SILVA-VIVI": "ERROU",
+    "VIVI-SILVA": "ERROU",
+
+    "SILVA-GABY": "ERROU",
+    "GABY-SILVA": "ERROU",
+
+    "VIVI-GABY": "ERROU",
+    "GABY-VIVI": "ERROU"
+};
+
+// Começar
+function comecar() {
+    const pessoa1 = document.getElementById("pessoa1").value;
+    const pessoa2 = document.getElementById("pessoa2").value;
+
+    if (!pessoa1 || !pessoa2) {
+        alert("Escolha duas pessoas! 😂");
+        return;
+    }
+
+    if (pessoa1 === pessoa2) {
+        alert("Escolha pessoas diferentes! 😂");
+        return;
+    }
+
+    duplaAtual = pessoa1 + "-" + pessoa2;
+
+    // Matemática aleatória
+    const numero1 = Math.floor(Math.random() * 15) + 1;
+    const numero2 = Math.floor(Math.random() * 15) + 1;
+
+    const operacoes = ["+", "-", "×"];
+    const operacao =
+        operacoes[Math.floor(Math.random() * operacoes.length)];
+
+    if (operacao === "+") {
+        respostaCorreta = numero1 + numero2;
+    }
+
+    if (operacao === "-") {
+        respostaCorreta = numero1 - numero2;
+    }
+
+    if (operacao === "×") {
+        respostaCorreta = numero1 * numero2;
+    }
+
+    document.getElementById("conta").innerText =
+        numero1 + " " + operacao + " " + numero2 + " = ?";
+
+    document.getElementById("matematica").style.display = "block";
+    document.getElementById("resultado").style.display = "none";
+}
+
+// Verificar matemática
+function verificarMatematica() {
+    const resposta =
+        Number(document.getElementById("resposta").value);
+
+    if (resposta !== respostaCorreta) {
+        alert("❌ Tenta de novo! 😂");
+        return;
+    }
+
+    let resultadoFinal;
+
+    if (resultadosFixos[duplaAtual]) {
+        resultadoFinal = resultadosFixos[duplaAtual];
+    } else {
+        resultadoFinal =
+            Math.random() < 0.5
+            ? "ACERTOU"
+            : "ERROU";
+    }
+
+    // Shippo
+    let porcentagem;
+
+    if (resultadoFinal === "ACERTOU") {
+        porcentagem = Math.floor(Math.random() * 41) + 60;
+    } else {
+        porcentagem = Math.floor(Math.random() * 60) + 1;
+    }
+
+    // Mostrar resultado
+    document.getElementById("matematica").style.display = "none";
+    document.getElementById("resultado").style.display = "block";
+
+    document.getElementById("dupla").innerText =
+        "💘 " + duplaAtual.replace("-", " + ");
+
+    document.getElementById("shippo").innerText =
+        "💕 SHIPPO: " + porcentagem + "%";
+}
+</script>
+
+</body>
+</html>
